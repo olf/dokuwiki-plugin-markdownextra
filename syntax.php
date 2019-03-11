@@ -4,16 +4,24 @@
  *
  * @license GPL 3 (http://www.gnu.org/licenses/gpl.html) - NOTE: PHP Markdown
  * Extra is licensed under the BSD license. See License.text for details.
- * @version 1.03 - 24.11.2012 - PHP Markdown Extra 1.2.5 included.
- * @author Joonas Pulakka <joonas.pulakka@iki.fi>, Jiang Le <smartynaoki@gmail.com>
+ * @version 1.1 - 11.3.2019 - Use cebe markdown
+ * @author Joonas Pulakka <joonas.pulakka@iki.fi>, Jiang Le <smartynaoki@gmail.com>, Olaf Peters <olf@magicolf.de>
  */
 
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once (DOKU_PLUGIN . 'syntax.php');
-require_once (DOKU_PLUGIN . 'markdownextra/markdown.php');
+
+spl_autoload_register(function ($class) {
+  include DOKU_PLUGIN . str_replace(array('\\', '/'), DIRECTORY_SEPARATOR, 'markdownextra/lib/' . $class) . '.php';
+});
 
 class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
+    function handleMarkdown($text) {
+      $parser = new \cebe\markdown\GithubMarkdown();
+
+      return $parser->parse($text);
+    }
 
     function getType() {
         return 'protected';
@@ -38,7 +46,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, Doku_Handler $handler) {
         switch ($state) {
             case DOKU_LEXER_ENTER :      return array($state, '');
-            case DOKU_LEXER_UNMATCHED :  return array($state, Markdown($match));
+            case DOKU_LEXER_UNMATCHED :  return array($state, $this->handleMarkdown($match));
             case DOKU_LEXER_EXIT :       return array($state, '');
         }
         return array($state,'');
@@ -50,7 +58,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
         if ($mode == 'xhtml') {
             list($state,$match) = $data;
             switch ($state) {
-                case DOKU_LEXER_ENTER :      break;    
+                case DOKU_LEXER_ENTER :      break;
                 case DOKU_LEXER_UNMATCHED :
                     $match = $this->_toc($renderer, $match);
                     $renderer->doc .= $match;
@@ -63,7 +71,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
             //dbg($data);
             list($state,$match) = $data;
             switch ($state) {
-                case DOKU_LEXER_ENTER :      break;    
+                case DOKU_LEXER_ENTER :      break;
                 case DOKU_LEXER_UNMATCHED :
                     if (!$renderer->meta['title']){
                         $renderer->meta['title'] = $this->_markdown_header($match);
@@ -87,7 +95,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
     }
 
     function _markdown_header($text)
-    {   
+    {
         $doc = new DOMDocument('1.0','UTF-8');
         //dbg($doc);
         $meta = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>';
@@ -98,7 +106,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
         }
         return false;
     }
-    
+
     function _internallinks($text)
     {
         $links = array();
@@ -116,7 +124,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
         }
         return $links;
     }
-    
+
     function _toc(&$renderer, $text)
     {
         $doc = new DOMDocument('1.0','UTF-8');
@@ -134,7 +142,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
                     $node->setAttribute('id',$hid);
                     $renderer->toc_additem($hid, $node->nodeValue, $match[1]);
                 }
-                
+
             }
         }
         //remove outer tags of content
