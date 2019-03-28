@@ -23,6 +23,15 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
       return $parser->parse($text);
     }
 
+    function handleArrows($text) {
+      // order of replacements is important as -> also matches -->, i.e. --> must be replaced first!
+      return str_replace(
+        array("--&gt;",   "==&gt;", "&lt;-&gt;", "&lt;=&gt;", "-&gt;", "=&gt;"),
+        array("&#10230;", "&#10233;", "&harr;", "&#8660;", "&rarr;", "&rArr;"),
+        $text
+      );
+    }
+
     function getType() {
         return 'protected';
     }
@@ -46,7 +55,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, Doku_Handler $handler) {
         switch ($state) {
             case DOKU_LEXER_ENTER :      return array($state, '');
-            case DOKU_LEXER_UNMATCHED :  return array($state, $this->handleMarkdown($match));
+            case DOKU_LEXER_UNMATCHED :  return array($state, $this->handleArrows($this->handleMarkdown($match)));
             case DOKU_LEXER_EXIT :       return array($state, '');
         }
         return array($state,'');
