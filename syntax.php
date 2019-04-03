@@ -23,11 +23,27 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
       return $parser->parse($text);
     }
 
-    function handleArrows($text) {
+    function handleSymbols($text) {
       // order of replacements is important as -> also matches -->, i.e. --> must be replaced first!
+      $replacements = array(
+        "--&gt;"    => "&#10230;",
+        "==&gt;"    => "&#10233;",
+        "&lt;-&gt;" => "&harr;",
+        "&lt;=&gt;" => "&#8660;",
+        "-&gt;"     => "&rarr;",
+        "=&gt;"     => "&rArr;",
+        "[ ]"       => "&#x2610;",
+        "[x]"       => "&#x2611;",
+        ":done:"    => "<span style=\"color:LimeGreen\">&#x2714;</span>",
+        ":pass:"    => "<span style=\"color:LimeGreen\">&#x2714;</span>",
+        ":fail:"    => "<span style=\"color:Crimson\">&#x2716;</span>",
+        ":smile:"   => "&#x263A;",
+        "/!\\"      => "&#x26A0;",
+      );
+
       return str_replace(
-        array("--&gt;",   "==&gt;", "&lt;-&gt;", "&lt;=&gt;", "-&gt;", "=&gt;"),
-        array("&#10230;", "&#10233;", "&harr;", "&#8660;", "&rarr;", "&rArr;"),
+        array_keys($replacements),
+        array_values($replacements),
         $text
       );
     }
@@ -55,7 +71,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, Doku_Handler $handler) {
         switch ($state) {
             case DOKU_LEXER_ENTER :      return array($state, '');
-            case DOKU_LEXER_UNMATCHED :  return array($state, $this->handleArrows($this->handleMarkdown($match)));
+            case DOKU_LEXER_UNMATCHED :  return array($state, $this->handleSymbols($this->handleMarkdown($match)));
             case DOKU_LEXER_EXIT :       return array($state, '');
         }
         return array($state,'');
