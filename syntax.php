@@ -32,6 +32,8 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
         "&lt;=&gt;" => "&#8660;",
         "-&gt;"     => "&rarr;",
         "=&gt;"     => "&rArr;",
+        "---"       => "&mdash;",
+        "--"        => "&ndash;",
         "[ ]"       => "&#x2610;",
         "[x]"       => "&#x2611;",
         ":done:"    => "<span style=\"color:LimeGreen\">&#x2714;</span>",
