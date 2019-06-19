@@ -44,7 +44,7 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
         ":fail:"    => "<span style=\"color:Crimson\">&#x2716;</span>",
 
         ":smile:"   => "&#x263A;",
-        "/!\\"      => "&#x26A0;",
+        "/!\\"      => "<span style=\"color:Orange\">&#x26A0;</span>",
       );
 
       return str_replace(
