@@ -37,8 +37,10 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
 
         "[ ]"       => "<span style=\"color:DarkSlateGray\">&#x2610;</span>",
         ":todo:"    => "<span style=\"color:DarkSlateGray\">&#x2610;</span>",
+        ":TODO:"    => "<span style=\"color:DarkSlateGray\">&#x2610;</span>",
         "[x]"       => "<span style=\"color:ForestGreen\">&#x2611;</span>",
         ":done:"    => "<span style=\"color:ForestGreen\">&#x2611;</span>",
+        ":DONE:"    => "<span style=\"color:ForestGreen\">&#x2611;</span>",
 
         ":pass:"    => "<span style=\"color:LimeGreen\">&#x2714;</span>",
         ":fail:"    => "<span style=\"color:Crimson\">&#x2716;</span>",
