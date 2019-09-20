@@ -41,6 +41,8 @@ class syntax_plugin_markdownextra extends DokuWiki_Syntax_Plugin {
         "[x]"       => "<span style=\"color:ForestGreen\">&#x2611;</span>",
         ":done:"    => "<span style=\"color:ForestGreen\">&#x2611;</span>",
         ":DONE:"    => "<span style=\"color:ForestGreen\">&#x2611;</span>",
+        ":cancel:"  => "<span style=\"color:Silver\">&#9746;</span>",
+        ":CANCEL:"  => "<span style=\"color:Silver\">&#9746;</span>",
 
         ":pass:"    => "<span style=\"color:LimeGreen\">&#x2714;</span>",
         ":fail:"    => "<span style=\"color:Crimson\">&#x2716;</span>",
